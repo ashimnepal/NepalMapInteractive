@@ -40,7 +40,7 @@ function getProvinceName(province) {
 // =====================
 // Creates the Leaflet map and disables some zoom controls for a focused experience.
 provinceMap = L.map("map", {
-  scrollWheelZoom: false,
+  scrollWheelZoom: true,
   touchZoom: false,
   doubleClickZoom: false,
   zoomControl: true,
@@ -79,11 +79,15 @@ function showAllProvinceTooltips() {
   });
 }
 
-// Helper to hide all province tooltips
+// Helper to hide all province tooltips and remove them from DOM
 function hideAllProvinceTooltips() {
   provinceGeoJson.eachLayer(function(layer) {
     if (layer._provinceTooltip) {
-      layer.closeTooltip();
+      // Remove the tooltip from the map and DOM
+      if (layer.getTooltip()) {
+        layer.unbindTooltip();
+      }
+      delete layer._provinceTooltip;
     }
   });
 }
@@ -234,6 +238,11 @@ function zoomToProvince(e) {
     style: style,
     onEachFeature: onEachDistrictFeature
   }).addTo(provinceMap);
+
+  // Bring district layer to front so its tooltips are above
+  if (stateGeoJson && stateGeoJson.bringToFront) {
+    stateGeoJson.bringToFront();
+  }
 
   // Add tooltips to each district
   stateGeoJson.eachLayer(function (layer) {
