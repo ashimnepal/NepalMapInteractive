@@ -1,139 +1,208 @@
+
+/*
+    Global box-sizing for all elements to make sizing predictable
+*/
 * {
-    box-sizing: border-box;
+        box-sizing: border-box;
 }
 
+
+/*
+    Set full height, remove default margin, and apply a modern gradient background
+*/
 html,
 body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100%;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Header Styles */
+
+/*
+    Header Styles: Brand and navigation text
+*/
 .navbar-brand {
-    font-weight: bold;
-    font-size: 1.3rem;
+        font-weight: bold;
+        font-size: 1.3rem;
 }
+
 
 .nav-text {
     font-size: 0.9rem;
     font-weight: 500;
 }
 
-/* Map Section */
+
+/*
+    Map Section: Container for the map with rounded corners and shadow
+*/
 .map-section {
-    background: white;
-    margin: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    position: relative;
+        background: white;
+        margin: 20px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
 }
 
+
+/*
+    Map Header: Title area with dark gradient and centered text
+*/
 .map-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
-    padding: 30px;
-    text-align: center;
-    position: relative;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
 }
 
+
+/*
+    Map Title: Large, bold, with subtle shadow
+*/
 .map-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+
+/*
+    Map Subtitle: Smaller, lighter text under the title
+*/
 .map-subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    opacity: 0.9;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        opacity: 0.9;
 }
 
+
+/*
+    Map Controls: Spacing for map control buttons
+*/
 .map-controls {
-    margin-top: 15px;
+        margin-top: 15px;
 }
 
+
+/*
+    Enhanced Map Container: Padding and light background for map area
+*/
 .map-container-enhanced {
-    position: relative;
-    padding: 20px;
-    background: #f8f9fa;
+        position: relative;
+        padding: 20px;
+        background: #f8f9fa;
 }
 
+
+/*
+    Interactive Map: Main map area with border and shadow
+*/
 .interactive-map {
-    width: 100%;
-    height: 70vh;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    border: 3px solid white;
+        width: 100%;
+        height: 70vh;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 3px solid white;
 }
 
-/* Info Panel */
+
+/*
+    Info Panel: Sidebar for showing province/district info
+*/
 .info-panel {
-    background: white;
-    margin: 20px 20px 20px 0;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    height: calc(100vh - 40px);
-    overflow-y: auto;
+        background: white;
+        margin: 20px 20px 20px 0;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        height: calc(100vh - 40px);
+        overflow-y: auto;
 }
 
+
+/*
+    Info Header: Gradient background for info panel header
+*/
 .info-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 25px;
-    text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        text-align: center;
 }
+
 
 .info-header h4 {
     font-weight: 700;
     margin-bottom: 8px;
 }
 
+
 .info-header p {
     margin-bottom: 0;
     opacity: 0.9;
 }
 
+
+/*
+    Info Content: Padding for the main content in info panel
+*/
 .info-content {
-    padding: 30px;
+        padding: 30px;
 }
 
+
+/*
+    Welcome Info: Title color for welcome message
+*/
 .welcome-info h5 {
-    color: #2c3e50;
-    font-weight: 600;
+        color: #2c3e50;
+        font-weight: 600;
 }
 
+
+/*
+    Stats Grid: Grid layout for statistics cards
+*/
 .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 25px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 25px;
 }
 
+
+/*
+    Stat Card: Card style for each statistic
+*/
 .stat-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    border: 1px solid #dee2e6;
-    transition: transform 0.3s ease;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        transition: transform 0.3s ease;
 }
+
 
 .stat-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+
+/*
+    Stat Number: Large, colored number in stat card
+*/
 .stat-number {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #667eea;
-    line-height: 1;
-    margin-bottom: 5px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #667eea;
+        line-height: 1;
+        margin-bottom: 5px;
 }
 
 .stat-label {
