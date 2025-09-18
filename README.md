@@ -46,6 +46,10 @@ js/
 
 - [Leaflet.js](https://leafletjs.com/) (included locally in the `js/` and `css/` folders)
 
+## Credits
+
+This project is inspired by and uses map data from [Jenish Shrestha's Leaflet Nepal project](https://jenishshrestha.github.io/leaflet-nepal/). Special thanks to Jenish Shrestha for providing the original map and license to use and adapt it for this interactive application.
+
 ## License
 
 This project is for educational and demonstration purposes.
