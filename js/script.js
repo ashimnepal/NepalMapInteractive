@@ -58,14 +58,35 @@ provinceGeoJson = L.geoJson(provinceData, {
 }).addTo(provinceMap);
 
 
+
 // Add tooltips to each province layer for better UX
 provinceGeoJson.eachLayer(function (layer) {
   var provinceName = getProvinceName(layer.feature.properties.Province);
-  layer.bindTooltip(provinceName, {
-    permanent: false,
-    direction: "center"
-  }).openTooltip();
+  // Store reference to tooltip for later control
+  layer._provinceTooltip = layer.bindTooltip(provinceName, {
+    permanent: true,
+    direction: "center",
+    className: 'province-tooltip'
+  });
 });
+
+// Helper to show all province tooltips
+function showAllProvinceTooltips() {
+  provinceGeoJson.eachLayer(function(layer) {
+    if (layer._provinceTooltip) {
+      layer.openTooltip();
+    }
+  });
+}
+
+// Helper to hide all province tooltips
+function hideAllProvinceTooltips() {
+  provinceGeoJson.eachLayer(function(layer) {
+    if (layer._provinceTooltip) {
+      layer.closeTooltip();
+    }
+  });
+}
 
 
 // Fit the map view to show all provinces
@@ -90,6 +111,8 @@ function style(feature) {
 
 
 // Highlights a province when hovered
+
+// Highlights a province when hovered and keeps tooltip visible
 function highlightFeature(e) {
   var layer = e.target;
   layer.setStyle({
@@ -101,6 +124,10 @@ function highlightFeature(e) {
   });
   if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
     layer.bringToFront();
+  }
+  // Ensure tooltip stays visible on hover
+  if (layer._provinceTooltip) {
+    layer.openTooltip();
   }
 }
 
@@ -129,16 +156,27 @@ function getProvinceColor(province) {
 
 
 // Resets province style when mouse leaves
+
+// Resets province style and shows tooltip when mouse leaves
 function resetHighlight(e) {
   provinceGeoJson.resetStyle(e.target);
+  var layer = e.target;
+  if (layer._provinceTooltip) {
+    layer.openTooltip();
+  }
 }
 
+
+// Zooms into a province and loads its districts when clicked
 
 // Zooms into a province and loads its districts when clicked
 function zoomToProvince(e) {
   var json,
     province_number = e.target.feature.properties.Province;
   var provinceName = getProvinceName(province_number);
+
+  // Hide all province tooltips when zooming in
+  hideAllProvinceTooltips();
 
   // Zoom to the selected province
   provinceMap.fitBounds(e.target.getBounds());
@@ -367,6 +405,7 @@ function updateInfoPanel(data) {
 }
 
 // Initializes the reset button to return to the full Nepal map view
+
 document.addEventListener('DOMContentLoaded', function() {
   const resetBtn = document.getElementById('resetMapView');
   if (resetBtn) {
@@ -378,6 +417,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Reset to full Nepal view
       var bound = provinceGeoJson.getBounds();
       provinceMap.fitBounds(bound);
+      // Show province tooltips again
+      showAllProvinceTooltips();
       // Hide reset button
       resetBtn.style.display = 'none';
       // Reset info panel
