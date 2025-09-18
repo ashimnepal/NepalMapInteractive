@@ -68,26 +68,55 @@ provinceGeoJson.eachLayer(function (layer) {
     direction: "center",
     className: 'province-tooltip'
   });
-});
-
-// Helper to show all province tooltips
-function showAllProvinceTooltips() {
-  provinceGeoJson.eachLayer(function(layer) {
+  // Add hover events for dynamic tooltip display after zoom
+  layer.on('mouseover', function(e) {
+    // Only show tooltip if it exists (not removed)
     if (layer._provinceTooltip) {
       layer.openTooltip();
     }
   });
+  layer.on('mouseout', function(e) {
+    // Only close tooltip if it exists and not in full map view
+    if (layer._provinceTooltip && !isFullMapView()) {
+      layer.closeTooltip();
+    }
+  });
+});
+
+// Helper to determine if map is in full province view (no districts shown)
+function isFullMapView() {
+  // If no district layer, or district layer is empty, we are in full map view
+  return !stateGeoJson || (stateGeoJson && stateGeoJson.getLayers && stateGeoJson.getLayers().length === 0);
 }
 
-// Helper to hide all province tooltips and remove them from DOM
-function hideAllProvinceTooltips() {
+// Helper to show all province tooltips
+function showAllProvinceTooltips() {
   provinceGeoJson.eachLayer(function(layer) {
-    if (layer._provinceTooltip) {
-      // Remove the tooltip from the map and DOM
-      if (layer.getTooltip()) {
-        layer.unbindTooltip();
-      }
-      delete layer._provinceTooltip;
+    // If tooltip reference is missing (was deleted), rebind it
+    if (!layer._provinceTooltip) {
+      var provinceName = getProvinceName(layer.feature.properties.Province);
+      layer._provinceTooltip = layer.bindTooltip(provinceName, {
+        permanent: true,
+        direction: "center",
+        className: 'province-tooltip'
+      });
+    }
+    layer.openTooltip();
+  });
+}
+
+
+// Helper to hide only the clicked province tooltip and restore others
+let lastClickedProvinceLayer = null;
+function hideClickedProvinceTooltip(clickedLayer) {
+  provinceGeoJson.eachLayer(function(layer) {
+    // If this is the clicked province, hide its tooltip
+    if (layer === clickedLayer && layer._provinceTooltip) {
+      layer.closeTooltip();
+      lastClickedProvinceLayer = layer;
+    } else if (layer._provinceTooltip) {
+      // For all other provinces, show their tooltip
+      layer.openTooltip();
     }
   });
 }
@@ -179,8 +208,8 @@ function zoomToProvince(e) {
     province_number = e.target.feature.properties.Province;
   var provinceName = getProvinceName(province_number);
 
-  // Hide all province tooltips when zooming in
-  hideAllProvinceTooltips();
+  // Hide only the clicked province tooltip, show others
+  hideClickedProvinceTooltip(e.target);
 
   // Zoom to the selected province
   provinceMap.fitBounds(e.target.getBounds());
@@ -253,6 +282,13 @@ function zoomToProvince(e) {
       })
       .openTooltip();
   });
+
+  // If another province was previously clicked, restore its tooltip
+  if (lastClickedProvinceLayer && lastClickedProvinceLayer !== e.target && lastClickedProvinceLayer._provinceTooltip) {
+    lastClickedProvinceLayer.openTooltip();
+  }
+
+  lastClickedProvinceLayer = e.target;
 
   console.log(`Zoomed to ${provinceName} with districts`);
 }
