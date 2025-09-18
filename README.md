@@ -6,6 +6,13 @@
 
 This project is an interactive web application that visualizes the map of Nepal, allowing users to explore its provinces and districts. The application is built using HTML, CSS, and JavaScript, and leverages the Leaflet.js library for map rendering and interactivity.
 
+
+<h3>When you Click on the province</h3>
+When you click on the province, it zooms onto the province with its respective districts.
+
+<img width="1331" height="568" alt="image" src="https://github.com/user-attachments/assets/e35f9cdf-4ef1-4f32-9897-a38fd8f7f64a" />
+
+
 ## Features
 
 - **Interactive Map**: Displays a map of Nepal with clickable provinces and districts.
