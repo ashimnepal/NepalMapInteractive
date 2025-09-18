@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Nepal Map - Election Portal</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Leaflet CSS -->
+    <link rel='stylesheet' href='css/leaflet.css'>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-map"></i> Interactive Nepal Map
+            </a>
+            <div class="navbar-nav">
+                <span class="nav-text text-white-50">Click provinces to explore districts</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Map Section -->
+            <div class="col-lg-9">
+                <div class="map-section">
+                    <div class="map-header">
+                        <h2 class="map-title">Federal Democratic Republic of Nepal</h2>
+                        <p class="map-subtitle">Interactive Provincial and District Map</p>
+                        <div class="map-controls">
+                            <button id="resetMapView" class="btn btn-outline-light btn-sm" style="display: none;">
+                                <i class="bi bi-arrow-left"></i> Back to All Provinces
+                            </button>
+                        </div>
+                    </div>
+                    <div class="map-container-enhanced">
+                        <div id='map' class="interactive-map"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="col-lg-3">
+                <div class="info-panel">
+                    <div class="info-header">
+                        <h4><i class="bi bi-info-circle"></i> Information Panel</h4>
+                        <p class="text-muted">Click on provinces or districts to view details</p>
+                    </div>
+                    
+                    <div id="infoContent" class="info-content">
+                        <div class="welcome-info">
+                            <div class="text-center mb-4">
+                                <i class="bi bi-map display-4 text-primary"></i>
+                            </div>
+                            <h5 class="text-center mb-3">Welcome to Nepal</h5>
+                            <p class="text-center text-muted mb-4">
+                                Explore Nepal's administrative divisions by clicking on provinces to see districts.
+                            </p>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-number">7</div>
+                                    <div class="stat-label">Provinces</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">77</div>
+                                    <div class="stat-label">Districts</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">753</div>
+                                    <div class="stat-label">Municipalities</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">6,743</div>
+                                    <div class="stat-label">Wards</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <!-- Leaflet JS -->
+    <script src='js/leaflet.js'></script>
+    
+    <!-- Nepal Map Data -->
+    <script src='js/nepal-province.js'></script>
+    <script src='js/province1-district.js'></script>
+    <script src='js/province2-district.js'></script>
+    <script src='js/province3-district.js'></script>
+    <script src='js/province4-district.js'></script>
+    <script src='js/province5-district.js'></script>
+    <script src='js/province6-district.js'></script>
+    <script src='js/province7-district.js'></script>
+    
+    <!-- Enhanced Script -->
+    <script src="js/script.js"></script>
+</body>
+</html>

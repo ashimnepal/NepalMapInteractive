@@ -1,0 +1,400 @@
+// Github Link: https://jenishshrestha.github.io/leaflet-nepal/
+
+var provinceMap, provinceGeoJson, stateGeoJson;
+
+// Function to get province names
+function getProvinceName(province) {
+  switch (province) {
+    case 1:
+      return "Province 1";
+    case 2:
+      return "Madhesh Province";
+    case 3:
+      return "Bagmati Province";
+    case 4:
+      return "Gandaki Province";
+    case 5:
+      return "Lumbini Province";
+    case 6:
+      return "Karnali Province";
+    case 7:
+      return "Sudurpashchim Province";
+    default:
+      return "Province " + province;
+  }
+}
+
+/**
+**  Initialize map
+**/
+provinceMap = L.map("map", {
+  scrollWheelZoom: false,
+  touchZoom: false,
+  doubleClickZoom: false,
+  zoomControl: true,
+  dragging: true
+}).setView([28.3949, 84.124], 8);
+
+/**
+**  GeoJSON data
+**/
+provinceGeoJson = L.geoJson(provinceData, {
+  style: style,
+  onEachFeature: onEachFeature
+}).addTo(provinceMap);
+
+// Add tooltips for provinces
+provinceGeoJson.eachLayer(function (layer) {
+  var provinceName = getProvinceName(layer.feature.properties.Province);
+  layer.bindTooltip(provinceName, {
+    permanent: false,
+    direction: "center"
+  }).openTooltip();
+});
+
+var bound = provinceGeoJson.getBounds();
+provinceMap.fitBounds(bound);
+
+/**
+*  Functions for map
+**/
+function style(feature) {
+  return {
+    weight: 2,
+    opacity: 1,
+    color: "#FFF",
+    dashArray: "1",
+    fillOpacity: 0.7,
+    fillColor: getProvinceColor(feature.properties.Province)
+  };
+}
+
+function highlightFeature(e) {
+  var layer = e.target;
+
+  layer.setStyle({
+    weight: 2,
+    color: "black",
+    dashArray: "",
+    fillOpacity: 0.7,
+    fillColor: "#fff"
+  });
+
+  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+    layer.bringToFront();
+  }
+}
+
+function getProvinceColor(province) {
+  switch (province) {
+    case 1:
+      return "red";
+      break;
+    case 2:
+      return "green";
+      break;
+    case 3:
+      return "blue";
+      break;
+    case 4:
+      return "lightblue";
+      break;
+    case 5:
+      return "lightgreen";
+      break;
+    case 6:
+      return "yellow";
+      break;
+    case 7:
+      return "orange";
+      break;
+    default:
+      return "skyblue";
+      break;
+  }
+}
+
+function resetHighlight(e) {
+  provinceGeoJson.resetStyle(e.target);
+  // info.update();
+}
+
+function zoomToProvince(e) {
+  var json,
+    province_number = e.target.feature.properties.Province;
+  var provinceName = getProvinceName(province_number);
+
+  provinceMap.fitBounds(e.target.getBounds());
+  console.log(stateGeoJson);
+
+  if (stateGeoJson != undefined) {
+    stateGeoJson.clearLayers();
+  }
+
+  switch (province_number) {
+    case 1:
+      json = province_1;
+      break;
+    case 2:
+      json = province_2;
+      break;
+    case 3:
+      json = province_3;
+      break;
+    case 4:
+      json = province_4;
+      break;
+    case 5:
+      json = province_5;
+      break;
+    case 6:
+      json = province_6;
+      break;
+    case 7:
+      json = province_7;
+      break;
+    default:
+      json = "";
+      break;
+  }
+
+  // Show reset button
+  const resetBtn = document.getElementById('resetMapView');
+  if (resetBtn) {
+    resetBtn.style.display = 'inline-block';
+  }
+
+  // Update info panel with province information
+  updateInfoPanel({
+    type: 'province',
+    name: provinceName,
+    number: province_number,
+    capital: getProvinceCapital(province_number),
+    color: getProvinceColor(province_number)
+  });
+
+  stateGeoJson = L.geoJson(json, {
+    style: style,
+    onEachFeature: onEachDistrictFeature
+  }).addTo(provinceMap);
+
+  stateGeoJson.eachLayer(function (layer) {
+    layer
+      .bindTooltip(layer.feature.properties.DISTRICT, {
+        permanent: true,
+        direction: "center"
+      })
+      .openTooltip();
+  });
+  
+  console.log(`Zoomed to ${provinceName} with districts`);
+}
+
+function onEachFeature(feature, layer) {
+  layer.on({
+    mouseover: highlightFeature,
+    mouseout: resetHighlight,
+    click: zoomToProvince
+  });
+}
+
+// District feature interactions
+function onEachDistrictFeature(feature, layer) {
+  layer.on({
+    mouseover: function(e) {
+      var layer = e.target;
+      layer.setStyle({
+        weight: 2,
+        color: "#667eea",
+        dashArray: "",
+        fillOpacity: 0.6,
+        fillColor: "#e8f4f8"
+      });
+    },
+    mouseout: function(e) {
+      if (stateGeoJson) {
+        stateGeoJson.resetStyle(e.target);
+      }
+    },
+    click: function(e) {
+      var districtName = e.target.feature.properties.DISTRICT || e.target.feature.properties.NAME || 'Unknown District';
+      var provinceNumber = e.target.feature.properties.Province || e.target.feature.properties.PROVINCE || 1;
+      
+      updateInfoPanel({
+        type: 'district',
+        name: districtName,
+        province: getProvinceName(provinceNumber),
+        provinceNumber: provinceNumber,
+        headquarters: getDistrictHeadquarters(districtName),
+        color: getProvinceColor(provinceNumber)
+      });
+      
+      console.log(`District selected: ${districtName}`);
+    }
+  });
+}
+
+// Helper functions
+function getProvinceCapital(provinceNum) {
+  const capitals = {
+    1: 'Biratnagar',
+    2: 'Janakpur', 
+    3: 'Hetauda',
+    4: 'Pokhara',
+    5: 'Deukhuri',
+    6: 'Birendranagar',
+    7: 'Godawari'
+  };
+  return capitals[provinceNum] || 'Unknown';
+}
+
+function getDistrictHeadquarters(districtName) {
+  const headquarters = {
+    'Kathmandu': 'Kathmandu',
+    'Bhaktapur': 'Bhaktapur',
+    'Lalitpur': 'Lalitpur',
+    'Chitwan': 'Bharatpur',
+    'Kaski': 'Pokhara',
+    'Morang': 'Biratnagar',
+    'Jhapa': 'Bhadrapur',
+    'Sunsari': 'Inaruwa',
+    'Dhanusha': 'Janakpur',
+    'Siraha': 'Siraha',
+    'Saptari': 'Rajbiraj',
+    'Mahottari': 'Jaleshwar',
+    'Sarlahi': 'Malangwa',
+    'Rautahat': 'Gaur',
+    'Bara': 'Kalaiya',
+    'Parsa': 'Birgunj',
+    'Makwanpur': 'Hetauda',
+    'Sindhuli': 'Sindhulimadi',
+    'Ramechhap': 'Manthali',
+    'Dolakha': 'Charikot',
+    'Sindhupalchok': 'Chautara',
+    'Kavrepalanchok': 'Dhulikhel',
+    'Nuwakot': 'Bidur',
+    'Rasuwa': 'Dhunche',
+    'Dhading': 'Nilkantha'
+  };
+  return headquarters[districtName] || districtName;
+}
+
+// Info panel update function
+function updateInfoPanel(data) {
+  const infoContent = document.getElementById('infoContent');
+  if (!infoContent) return;
+  
+  if (data.type === 'province') {
+    infoContent.innerHTML = `
+      <div class="province-info fade-in-up">
+        <div class="info-title" style="background: ${data.color}; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+          <h5 style="margin: 0; font-weight: 700;">${data.name}</h5>
+          <small style="opacity: 0.9;">Province ${data.number}</small>
+        </div>
+        
+        <div class="info-details">
+          <div class="detail-item">
+            <i class="bi bi-building text-primary"></i>
+            <span class="label">Capital:</span>
+            <span class="value">${data.capital}</span>
+          </div>
+          <div class="detail-item">
+            <i class="bi bi-geo-alt text-primary"></i>
+            <span class="label">Province:</span>
+            <span class="value">Province ${data.number}</span>
+          </div>
+        </div>
+        
+        <div class="instruction-box">
+          <i class="bi bi-cursor text-warning"></i>
+          <p>Click on districts within this province to see detailed information</p>
+        </div>
+      </div>
+    `;
+  } else if (data.type === 'district') {
+    infoContent.innerHTML = `
+      <div class="district-info fade-in-up">
+        <div class="info-title" style="background: ${data.color}; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+          <h5 style="margin: 0; font-weight: 700;">${data.name} District</h5>
+          <small style="opacity: 0.9;">${data.province}</small>
+        </div>
+        
+        <div class="info-details">
+          <div class="detail-item">
+            <i class="bi bi-building text-primary"></i>
+            <span class="label">Headquarters:</span>
+            <span class="value">${data.headquarters}</span>
+          </div>
+          <div class="detail-item">
+            <i class="bi bi-map text-primary"></i>
+            <span class="label">Province:</span>
+            <span class="value">${data.province}</span>
+          </div>
+          <div class="detail-item">
+            <i class="bi bi-hash text-primary"></i>
+            <span class="label">Province No:</span>
+            <span class="value">${data.provinceNumber}</span>
+          </div>
+        </div>
+        
+      </div>
+    `;
+  }
+}
+
+// Initialize reset button functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const resetBtn = document.getElementById('resetMapView');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      // Clear district layer
+      if (stateGeoJson) {
+        stateGeoJson.clearLayers();
+      }
+      
+      // Reset to full Nepal view
+      var bound = provinceGeoJson.getBounds();
+      provinceMap.fitBounds(bound);
+      
+      // Hide reset button
+      resetBtn.style.display = 'none';
+      
+      // Reset info panel
+      const infoContent = document.getElementById('infoContent');
+      if (infoContent) {
+        infoContent.innerHTML = `
+          <div class="welcome-info">
+            <div class="text-center mb-4">
+              <i class="bi bi-map display-4 text-primary"></i>
+            </div>
+            <h5 class="text-center mb-3">Welcome to Nepal</h5>
+            <p class="text-center text-muted mb-4">
+              Explore Nepal's administrative divisions by clicking on provinces to see districts.
+            </p>
+            
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Provinces</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">77</div>
+                <div class="stat-label">Districts</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">753</div>
+                <div class="stat-label">Municipalities</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">6,743</div>
+                <div class="stat-label">Wards</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      console.log('Map reset to show all provinces');
+    });
+  }
+});
